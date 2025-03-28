@@ -1,0 +1,64 @@
+server:
+  port: 9000
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: video-user-service
+          uri: lb://video-user
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - StripPrefix=1
+            
+        - id: video-auth-service
+          uri: lb://video-auth
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=1
+            
+        - id: video-movie-service
+          uri: lb://video-movie
+          predicates:
+            - Path=/api/movie/**
+          filters:
+            - StripPrefix=1
+            
+        - id: video-comment-service
+          uri: lb://video-comment
+          predicates:
+            - Path=/api/comment/**
+          filters:
+            - StripPrefix=1
+            
+        - id: video-storage-service
+          uri: lb://video-storage
+          predicates:
+            - Path=/api/storage/**
+          filters:
+            - StripPrefix=1
+            
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+            
+      # 网关限流配置
+      default-filters:
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 10  # 每秒允许的请求数
+            redis-rate-limiter.burstCapacity: 20  # 令牌桶容量
+            redis-rate-limiter.requestedTokens: 1  # 一个请求需要的令牌数
+            key-resolver: "#{@pathKeyResolver}"  # 限流键的解析器
+
+# 日志配置
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+    reactor.netty.http.client: debug 

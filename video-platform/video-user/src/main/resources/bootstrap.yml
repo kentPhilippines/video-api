@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: video-user
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: video-platform
+        group: DEFAULT_GROUP
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml
+        namespace: video-platform
+        group: DEFAULT_GROUP
+        # 共享配置
+        shared-configs:
+          - data-id: common-${spring.profiles.active}.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+  profiles:
+    active: dev 

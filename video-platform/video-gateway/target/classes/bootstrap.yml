@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: video-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: video-platform
+        group: DEFAULT_GROUP
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml
+        namespace: video-platform
+        group: DEFAULT_GROUP
+        shared-configs:
+          - data-id: common-${spring.profiles.active}.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 开启从注册中心动态创建路由的功能
+          lower-case-service-id: true # 使用小写服务名，默认是大写
+  profiles:
+    active: dev 
